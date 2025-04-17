@@ -1,0 +1,29 @@
+spring:
+  main:
+    # tomcatを起動しない
+    web-application-type: none
+  # JDBC Datasource設定
+  datasource:
+    driverClassName: org.postgresql.Driver
+    username: postgres
+    password: postgres
+    url: jdbc:postgresql://localhost:5432/td_aip?rewriteBatchedStatements=true
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+
+logging:
+  level:
+      com.hitachi.tdaip: debug
+#    org.hibernate.SQL: debug
+#    org.hibernate.type.EnumType: trace
+#    org.hibernate.type.descriptor.sql.BasicBinder: trace
+
+gdal-config:
+  config:
+    GML_SKIP_RESOLVE_ELEMS: NONE
+    GML_EXPOSE_GML_ID: YES
+    #GML_INVERT_AXIS_ORDER_IF_LAT_LONG: NO
+    #WRITE_GFS: NO　-> 効果なし
+    #GML_SAVE_RESOLVED_TO: "C:\\Users\\dpls01\\AppData\\Local\\Temp\\temp.resolved.gml"

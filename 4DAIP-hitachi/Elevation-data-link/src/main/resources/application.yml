@@ -1,0 +1,41 @@
+spring:
+  main:
+    # tomcatを起動しない
+    web-application-type: none
+  # JDBC Datasource設定
+  datasource:
+    driverClassName: org.postgresql.Driver
+    username: postgres
+    password: postgres
+    # local
+    url: jdbc:postgresql://localhost:5432/td_aip?rewriteBatchedStatements=true
+    # CT_ダム側
+#    url: jdbc:postgresql://localhost:55432/td_aip_dam?rewriteBatchedStatements=true
+    # CT_海岸側
+#    url: jdbc:postgresql://localhost:55432/td_aip_sea?rewriteBatchedStatements=true
+    # AT_ダム側
+#    url: jdbc:postgresql://localhost:65432/td_aip_dam?rewriteBatchedStatements=true
+    # AT_海岸側
+#    url: jdbc:postgresql://localhost:65432/td_aip_sea?rewriteBatchedStatements=true
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+#    properties:
+#      hibernate:
+#        show_sql: true
+#        use_sql_comments: true
+#        format_sql: true
+
+logging:
+  level:
+    com.hitachi.tdaip: debug
+#    org.hibernate.SQL: debug
+#    org.hibernate.type: trace
+#    org.hibernate.type.descriptor.sql.BasicBinder: trace
+
+Elevation-data-link:
+  #1mメッシュ
+#  DemFileNamePattern: ".*DEM1A.*\\.xml"
+  #5mメッシュ
+  DemFileNamePattern: ".*DEM5A.*\\.xml"
+  GeoTiffOutputPath: "C:\\temp\\geotiff"
+  SqlOutputPath: "C:\\temp\\sql"

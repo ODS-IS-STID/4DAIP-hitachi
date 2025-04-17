@@ -1,0 +1,4 @@
+rootProject.name = 'Elevation-data-link'
+
+include ':3d-aip-common'
+project(':3d-aip-common').projectDir = new File(settingsDir, '../3d-aip-common/')

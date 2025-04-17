@@ -1,0 +1,10 @@
+<mesh>12345<lowerCorner>123.111 321.222</lowerCorner>
+	<upperCorner>123.1111 321.2222</upperCorner>
+	<low>111 222</low>
+	<high>333 444</high>
+	<tupleList>地表面,122.111
+地表面でない,222.222
+testData2</tupleList>
+	<sequenceRule order="asc">testRule</sequenceRule>
+	<startPoint>0 0</startPoint>
+</mesh>

@@ -1,0 +1,2 @@
+python SpatialIdServer.py
+pause

@@ -1,0 +1,156 @@
+server:
+  # RESTコントローラのポート
+  port: 18080
+  tomcat:
+    relaxed-path-chars: <,>,[,]
+    relaxed-query-chars: <,>,[,],|,{,}
+spring:
+  # JDBC Datasource設定
+  datasource:
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:mem:MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH
+    username: sa
+    password:
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+  #JSONのプロパティで値がnullなら出力しない
+  jackson.default-property-inclusion: NON_NULL
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.type.EnumType: trace
+    org.hibernate.type.descriptor.sql.BasicBinder: trace
+
+  #main:
+  #  web-application-type: none
+
+# ドローン領域API
+drone-domain-api:
+  # リクエストヘッダのキー名
+  request-header.key-name:
+    # ユーザID
+    tdaip-user-id: Tdaip-User-ID
+    # 認可
+    authorization: Authorization
+  # Bearerトークン
+  bearer-token:
+    # 名称
+    name: Bearer
+    # 有効期限算出で現在時刻に加算する秒数※86400=60*60*24[秒]=1[日]
+    expiration.add-sec: 86400
+    # Bearerトークンの暗号化に使用するキー
+    key: wV6VFef8bASntcLfENp8H33dcSUHishC
+  # サーバーへの接続（ログイン）
+  connect:
+    path: /common_service/loc_connect
+  # 空域登録
+  put-airspace:
+    path: /common_service/loc_put_airspace
+  # 空域予約
+  put-reserve-area:
+    path: /common_service/loc_put_reserve_area
+  # 空域情報取得
+  select-airspace:
+    path: /common_service/loc_select_airspace
+    # レスポンス
+    response:
+      # 空間IDの値
+      values:
+        # 空間情報
+        value:
+          # 空域空間の情報
+          airspace:
+            # 飛行空域
+            air-area:
+              # 物標
+              barrier:
+                # 地形
+                terrain:
+                  # 素となる情報へのリンク
+                  reference: 国土地理院
+                # 建物
+                building:
+                  # 素となる情報へのリンク
+                  reference: PLATEAU
+              # 飛行不可となるリスク値以上
+              unflyable:
+                # 素となる情報へのリンク
+                reference: ３次元空間基盤
+  # 空域削除
+  delete:
+    path: /common_service/loc_delete
+  # 空間情報取得
+  get-value:
+    path: /common_service/loc_get_value
+  # 飛行可能な空域取得
+  select-airspace-arrangement:
+    path: /common_service/loc_select_airspace_arrangement
+  # 飛行可能な空域のストリームによる取得
+  select-airspace-arrangement-stream:
+    path: /common_service/loc_select_airspace_arrangement_stream
+    # 大量のデータを分割して取得
+    divide:
+      # 1分割の件数：1以上の整数
+      partition-size: 2
+      #　送信停止間隔[秒]：1以上の整数
+      send-stop-interval: 3
+      # タイムアウト[秒]：0は無期限
+      timeout-sec: 0
+    # 変化を取得
+    alteration:
+      #　送信停止間隔[秒]：1以上の整数
+      send-stop-interval: 10
+      # タイムアウト[秒]：0は無期限
+      timeout-sec: 60
+  # 飛行不可とする最低のリスク値：0以上の整数
+  unflyable.risk.value.min: 0
+
+# 実証
+experiment:
+  # 空域※WGS84(SRID=4326)
+  airspace:
+    # 緯度
+    lat:
+      # 最大：北
+      max: 37.66588567407962
+      # 最小:南
+      min: 37.62837193983583
+    # 経度
+    lon:
+      # 最大：東
+      max: 140.98548889160156
+      # 最小：西
+      min: 140.95321655273438
+    # 海抜高度
+    alt:
+      # 最大：高
+      max: 159.999
+      # 最小：低
+      min: 0
+  # 空間ID
+  spatialId:
+    # ズーム
+    z:
+      # 最大
+      max: 20
+      # 最小
+      min: 20
+    # 高度方向
+    f:
+      # 最大：高
+      max: 4
+      # 最小：低
+      min: 0
+    # 経度方向
+    x:
+      # 最大：東
+      max: 934937
+      # 最小：西
+      min: 934844
+    # 緯度方向
+    y:
+      # 最大：南
+      max: 405835
+      # 最小：北
+      min: 405698

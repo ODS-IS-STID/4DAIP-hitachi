@@ -1,0 +1,173 @@
+buildscript {
+	ext {
+		springBootVersion = '3.2.4'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
+
+plugins {
+    // SpringBootアップグレード
+    id "org.openrewrite.rewrite" version "6.8.4"
+//    id "io.spring.dependency-management" version "1.0.6.RELEASE"
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'jacoco'
+// SpringBootアップグレード
+apply plugin: "org.openrewrite.rewrite"
+
+// SpringBootアップグレード
+rewrite {
+    activeRecipe("org.openrewrite.java.spring.boot3.UpgradeSpringBoot_3_2")
+}
+
+group = 'com.hitachi.tdaip'
+
+version = '0.0.1'
+sourceCompatibility = '17'
+
+configurations {
+	developmentOnly
+	runtimeClasspath {
+		extendsFrom developmentOnly
+	}
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	// Spring Boot Starter
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter'
+
+    implementation 'org.postgresql:postgresql'
+    annotationProcessor 'org.projectlombok:lombok'
+    compileOnly 'org.projectlombok:lombok'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.1'
+
+	// RESTコントローラ用
+	implementation 'org.springframework:spring-web'
+	implementation 'com.google.protobuf:protobuf-java:3.21.7'
+
+	// UT
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // SpringBootアップグレード
+//    rewrite("org.openrewrite.recipe:rewrite-spring:5.5.0")
+
+    implementation project(':3d-aip-common')
+}
+
+bootJar {
+    enabled = false
+}
+
+//javadoc,junit,jacoco対象クラスリスト
+def targetClasses = [
+    'com/hitachi/tdaip/mobilityintegration/adjustcalc/AroundRiskVoxelInfoList',
+    'com/hitachi/tdaip/mobilityintegration/adjustcalc/RiskVoxelInfo',
+    'com/hitachi/tdaip/mobilityintegration/config/AppConfiguration',
+    'com/hitachi/tdaip/mobilityintegration/service/AirRiskAdjustCalcService',
+    'com/hitachi/tdaip/mobilityintegration/service/AirRiskCalcService',
+    'com/hitachi/tdaip/mobilityintegration/service/ForecastRiskAdjustCalcService',
+    'com/hitachi/tdaip/mobilityintegration/service/ForecastRiskCalcService',
+    'com/hitachi/tdaip/mobilityintegration/service/GroundRiskCalcService',
+    'com/hitachi/tdaip/mobilityintegration/service/RiskCalcConfigService',
+    'com/hitachi/tdaip/mobilityintegration/service/impl/AirRiskAdjustCalcServiceImpl',
+    'com/hitachi/tdaip/mobilityintegration/service/impl/AirRiskCalcServiceImpl',
+    'com/hitachi/tdaip/mobilityintegration/service/impl/AirRiskCommonCalcServiceImpl',
+    'com/hitachi/tdaip/mobilityintegration/service/impl/ForecastRiskAdjustCalcServiceImpl',
+    'com/hitachi/tdaip/mobilityintegration/service/impl/ForecastRiskCalcServiceImpl',
+    'com/hitachi/tdaip/mobilityintegration/service/impl/GroundRiskCalcServiceImpl',
+    'com/hitachi/tdaip/mobilityintegration/service/impl/RiskAdjustCalcCommonServiceImpl',
+    'com/hitachi/tdaip/mobilityintegration/service/impl/RiskCalcConfigServiceImpl',
+    'com/hitachi/tdaip/mobilityintegration/util/AdjustCalSpatialIdUtil',
+]
+
+task delombok(type: JavaExec, dependsOn: compileJava) {
+    ext.outputDir = file("$buildDir/delombok")
+    classpath = sourceSets.main.compileClasspath + sourceSets.main.output.generatedSourcesDirs
+    main = 'lombok.launch.Main'
+    args('delombok', 'src/main/java', '-d', outputDir)
+    doFirst {
+        outputDir.deleteDir()
+    }
+}
+
+// JavadocでJava8以降のタグを出力するためのオプション
+def javadocTagOptions = ["apiNote:a:API Note:", "implSpec:a:Implementation Requirements:", "implNote:a:Implementation Note:"]
+// Javadoc生成時のクラスパス
+def javadocClasspath = sourceSets.main.compileClasspath + sourceSets.main.output.generatedSourcesDirs + files("$buildDir/delombok")
+
+javadoc {
+    dependsOn([compileJava, delombok])
+    options.charSet = 'UTF-8'
+    options.encoding = 'UTF-8'
+    options.docEncoding = 'UTF-8'
+    failOnError = false
+    classpath = javadocClasspath
+    classpath += sourceSets.test.compileClasspath
+    source = delombok.outputDir
+    source +=sourceSets.test.allJava
+    options.tags = javadocTagOptions
+    //JavadocMemberLevelでアクセス修飾子を以下の
+    //PACKAGE、PRIVATE、PROTECTED、PUBLICから選択可能
+    //https://docs.gradle.org/current/javadoc/org/gradle/external/javadoc/JavadocMemberLevel.html
+    options.setMemberLevel(JavadocMemberLevel.PACKAGE)
+    //テストクラスのみのJavadocを出力する場合は以下のコメントを外す
+    //includes = ['**/**Test.java']
+    //出力するクラスの.javaを指定
+    include(
+        //メインクラス
+        targetClasses.collect{it + '.java'}
+//    +
+        //テストクラス
+//        targetClasses.collect{it + 'Test*.java'}
+    )
+}
+
+// コンパイル時に使用する文字コードをUTF-8で固定する
+tasks.withType(AbstractCompile).each { it.options.encoding = 'UTF-8' }
+tasks.withType(Test) {
+    systemProperty "file.encoding", "UTF-8"
+}
+
+test {
+    //並列実行数
+    maxParallelForks 4
+    useJUnitPlatform()
+    //テストクラスの.classを指定
+    include(targetClasses.collect{it + 'Test*.class'})
+//  include 'com/hitachi/tdaip/weatherandcopilot/provider/model/**/*Test.class'
+//  testLogging {
+//      events 'standard_out', 'standard_error'
+//  }
+}
+
+test.finalizedBy jacocoTestReport
+
+jacocoTestReport {
+    reports {
+        html.enabled = true
+    }
+    classDirectories.setFrom(classDirectories.files.collect {
+    //メインクラスの.classを指定
+      fileTree(dir: it, include: targetClasses.collect{it + '.class'})
+    })
+    doFirst {
+       file(reports.html.outputLocation).deleteDir()
+    }
+}

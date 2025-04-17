@@ -1,0 +1,254 @@
+buildscript {
+	ext {
+		springBootVersion = '3.2.4'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
+
+plugins {
+    // SpringBootアップグレード
+    id "org.openrewrite.rewrite" version "6.8.4"
+//    id "io.spring.dependency-management" version "1.0.6.RELEASE"
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'jacoco'
+// SpringBootアップグレード
+apply plugin: "org.openrewrite.rewrite"
+
+// SpringBootアップグレード
+rewrite {
+    activeRecipe("org.openrewrite.java.spring.boot3.UpgradeSpringBoot_3_2")
+}
+
+group = 'com.hitachi.tdaip'
+
+version = '0.0.1'
+sourceCompatibility = '17'
+
+configurations {
+	developmentOnly
+	runtimeClasspath {
+		extendsFrom developmentOnly
+	}
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+configurations.all {
+	//exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	// Spring Boot Starter
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter'
+
+    implementation 'org.hibernate.orm:hibernate-spatial'
+	implementation 'org.postgresql:postgresql'
+	annotationProcessor 'org.projectlombok:lombok'
+	compileOnly 'org.projectlombok:lombok'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.1'
+    implementation 'com.googlecode.json-simple:json-simple:1.1'
+	implementation 'com.google.protobuf:protobuf-java:3.21.7'
+
+	// Geometry操作用
+	implementation 'org.locationtech.jts:jts-core:1.19.0'
+	implementation 'org.gdal:gdal:3.5.0'
+
+    // RESTコントローラ用
+    //implementation 'org.springframework:spring-web'
+
+    // UT
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation "org.junit.jupiter:junit-jupiter:5.10.2"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.10.2"
+    testRuntimeOnly 'com.h2database:h2'
+    // staticメソッドのモック化対応
+    testImplementation 'org.mockito:mockito-inline:4.11.0'
+
+    // SpringBootアップグレード
+//    rewrite("org.openrewrite.recipe:rewrite-spring:5.5.0")
+
+    implementation project(':3d-aip-common')
+	implementation project(':voxel-data-link')
+}
+
+//javadoc,junit,jacoco対象クラスリスト
+def targetClasses = [
+    'com/hitachi/tdaip/voxel/dem/service/CreateDemVoxelInfo',
+    'com/hitachi/tdaip/voxel/dem/service/RegistDemVoxelInfo',
+    'com/hitachi/tdaip/voxel/dem/service/impl/CreateDemVoxelInfoImpl',
+    'com/hitachi/tdaip/voxel/dem/service/impl/RegistDemVoxelInfoImpl',
+    'com/hitachi/tdaip/voxel/did/service/CreateDidVoxelInfo',
+    'com/hitachi/tdaip/voxel/did/service/RegistDidVoxelInfo',
+    'com/hitachi/tdaip/voxel/did/service/impl/CreateDidVoxelInfoImpl',
+    'com/hitachi/tdaip/voxel/did/service/impl/RegistDidVoxelInfoImpl',
+    /*
+    'com/hitachi/tdaip/voxel/dipsflightplan/service/CreateDipsFlightPlanVoxelInfo',
+    'com/hitachi/tdaip/voxel/dipsflightplan/service/RegistDipsFlightPlanVoxelInfo',
+    'com/hitachi/tdaip/voxel/dipsflightplan/service/impl/CreateDipsFlightPlanVoxelInfoImpl',
+    'com/hitachi/tdaip/voxel/dipsflightplan/service/impl/RegistDipsFlightPlanVoxelInfoImpl',
+    'com/hitachi/tdaip/voxel/dipsnoflyarea/service/CreateDipsNoFlyAreaVoxelInfo',
+    'com/hitachi/tdaip/voxel/dipsnoflyarea/service/RegistDipsNoFlyAreaVoxelInfo',
+    'com/hitachi/tdaip/voxel/dipsnoflyarea/service/impl/CreateDipsNoFlyAreaVoxelInfoImpl',
+    'com/hitachi/tdaip/voxel/dipsnoflyarea/service/impl/RegistDipsNoFlyAreaVoxelInfoImpl',
+    'com/hitachi/tdaip/voxel/link/service/MannedAircraftInformationVoxelLinkService',
+    'com/hitachi/tdaip/voxel/link/service/PrecipitationVoxelLinkService',
+    'com/hitachi/tdaip/voxel/link/service/WindVoxelLinkService',
+    'com/hitachi/tdaip/voxel/link/service/impl/MannedAircraftInformationVoxelLinkServiceImpl',
+    'com/hitachi/tdaip/voxel/link/service/impl/PrecipitationVoxelLinkServiceImpl',
+    'com/hitachi/tdaip/voxel/link/service/impl/WindVoxelLinkServiceImpl',
+    'com/hitachi/tdaip/voxel/mannedaircraftinformation/servie/CreateMannedAircraftInformationVoxelInfo',
+    'com/hitachi/tdaip/voxel/mannedaircraftinformation/servie/DeleteMannedAircraftInformationVoxelInfo',
+    'com/hitachi/tdaip/voxel/mannedaircraftinformation/servie/DeleteRegistMannedAircraftInformationVoxelInfo',
+    'com/hitachi/tdaip/voxel/mannedaircraftinformation/servie/RegistMannedAircraftInformationVoxelInfo',
+    'com/hitachi/tdaip/voxel/mannedaircraftinformation/servie/impl/CreateMannedAircraftInformationVoxelInfoImpl',
+    'com/hitachi/tdaip/voxel/mannedaircraftinformation/servie/impl/DeleteMannedAircraftInformationVoxelInfoImpl',
+    'com/hitachi/tdaip/voxel/mannedaircraftinformation/servie/impl/DeleteRegistMannedAircraftInformationVoxelInfoImpl',
+    'com/hitachi/tdaip/voxel/mannedaircraftinformation/servie/impl/RegistMannedAircraftInformationVoxelInfoImpl',
+    'com/hitachi/tdaip/voxel/precipitation/service/CreatePrecipitationVoxelInfo',
+    'com/hitachi/tdaip/voxel/precipitation/service/DeletePrecipitationVoxelInfo',
+    'com/hitachi/tdaip/voxel/precipitation/service/DeleteRegistPrecipitationVoxelInfo',
+    'com/hitachi/tdaip/voxel/precipitation/service/RegistPrecipitationVoxelInfo',
+    'com/hitachi/tdaip/voxel/precipitation/service/impl/CreatePrecipitationVoxelInfoImpl',
+    'com/hitachi/tdaip/voxel/precipitation/service/impl/DeletePrecipitationVoxelInfoImpl',
+    'com/hitachi/tdaip/voxel/precipitation/service/impl/DeleteRegistPrecipitationVoxelInfoImpl',
+    'com/hitachi/tdaip/voxel/precipitation/service/impl/RegistPrecipitationVoxelInfoImpl',
+    */
+    'com/hitachi/tdaip/voxel/tdcitymodel/service/Create3dCityModelVoxelInfo',
+    'com/hitachi/tdaip/voxel/tdcitymodel/service/Regist3dCityModelVoxelInfo',
+    'com/hitachi/tdaip/voxel/tdcitymodel/service/impl/Create3dCityModelVoxelInfoImpl',
+    'com/hitachi/tdaip/voxel/tdcitymodel/service/impl/Regist3dCityModelVoxelInfoImpl',
+    /*
+    'com/hitachi/tdaip/voxel/wind/service/CreateWindVoxelInfo',
+    'com/hitachi/tdaip/voxel/wind/service/DeleteRegistWindVoxelInfo',
+    'com/hitachi/tdaip/voxel/wind/service/DeleteWindVoxelInfo',
+    'com/hitachi/tdaip/voxel/wind/service/RegistWindVoxelInfo',
+    'com/hitachi/tdaip/voxel/wind/service/impl/CreateWindVoxelInfoImpl',
+    'com/hitachi/tdaip/voxel/wind/service/impl/DeleteRegistWindVoxelInfoImpl',
+    'com/hitachi/tdaip/voxel/wind/service/impl/DeleteWindVoxelInfoImpl',
+    'com/hitachi/tdaip/voxel/wind/service/impl/RegistWindVoxelInfoImpl',
+	*/
+    //'com/hitachi/tdaip/VoxelDataLinkApplication',
+    //'com/hitachi/tdaip/voxel/AppRunner',
+
+
+]
+
+//voxel-data-linkのclassDirectories
+def voxelDataLinkClassDirectories = files(
+        "../voxel-data-link/build/classes"
+    )
+//voxel-data-linkのsourceDirectories
+def voxelDataLinkSourceDirectories = files(
+        "../voxel-data-link/src/main/java"
+    )
+
+task delombok(type: JavaExec, dependsOn: compileJava) {
+    ext.outputDir = file("$buildDir/delombok")
+    classpath = sourceSets.main.compileClasspath +
+        sourceSets.main.output.generatedSourcesDirs +
+        voxelDataLinkClassDirectories
+    main = 'lombok.launch.Main'
+    args('delombok', 'src/main/java', '../voxel-data-link/src/main/java', '-d', outputDir)
+    doFirst {
+        outputDir.deleteDir()
+    }
+}
+
+// JavadocでJava8以降のタグを出力するためのオプション
+def javadocTagOptions = ["apiNote:a:API Note:", "implSpec:a:Implementation Requirements:", "implNote:a:Implementation Note:"]
+// Javadoc生成時のクラスパス
+def javadocClasspath = sourceSets.main.compileClasspath +
+     sourceSets.main.output.generatedSourcesDirs +
+     files("$buildDir/delombok") +
+     voxelDataLinkSourceDirectories
+
+javadoc {
+    dependsOn([compileJava, delombok])
+	options.charSet = 'UTF-8'
+	options.encoding = 'UTF-8'
+	options.docEncoding = 'UTF-8'
+	failOnError = false
+    classpath = javadocClasspath
+    classpath += sourceSets.test.compileClasspath
+    source = delombok.outputDir
+    source +=sourceSets.test.allJava
+    options.tags = javadocTagOptions
+	//JavadocMemberLevelでアクセス修飾子を以下の
+	//PACKAGE、PRIVATE、PROTECTED、PUBLICから選択可能
+	//https://docs.gradle.org/current/javadoc/org/gradle/external/javadoc/JavadocMemberLevel.html
+	options.setMemberLevel(JavadocMemberLevel.PACKAGE)
+	//テストクラスのみのJavadocを出力する場合は以下のコメントを外す
+	//includes = ['**/**Test.java']
+    //出力するクラスの.javaを指定
+    include(
+        //メインクラス
+//        targetClasses.collect{it + '.java'}
+//    +
+        //テストクラス
+        targetClasses.collect{it + 'Test*.java'}
+    )
+}
+
+// コンパイル時に使用する文字コードをUTF-8で固定する
+tasks.withType(AbstractCompile).each { it.options.encoding = 'UTF-8' }
+tasks.withType(Test) {
+	systemProperty "file.encoding", "UTF-8"
+}
+
+test {
+    //並列実行数
+    maxParallelForks 4
+    useJUnitPlatform()
+    //テストクラスの.classを指定
+    include(targetClasses.collect{it + 'Test*.class'})
+
+//  testLogging {
+//      events 'standard_out', 'standard_error'
+//  }
+}
+
+//コンパイル対象外の.javaファイルを指定
+//compileTestJava {
+//'com/hitachi/tdaip/weatherandcopilot/service/importer/impl/WniWindSpeedForecastImporterImplTest.java',
+//}
+
+test.finalizedBy jacocoTestReport
+
+jacocoTestReport {
+	reports {
+		html.enabled = true
+	}
+    classDirectories.from = files(
+        classDirectories.files.collect {
+            //メインクラスの.classを指定
+            fileTree(dir: it, include: targetClasses.collect{it + '.class'})
+        },
+        voxelDataLinkClassDirectories.files.collect {
+            fileTree(dir: it,
+                //メインクラスの.classを指定
+                include: targetClasses.collect{'/java/main/' + it + '.class'})
+        },
+    )
+	sourceDirectories.from = files(
+		sourceDirectories.files,
+        voxelDataLinkSourceDirectories
+	)
+    doFirst {
+       file(reports.html.outputLocation).deleteDir()
+    }
+}

@@ -1,0 +1,294 @@
+buildscript {
+    ext {
+        springBootVersion = '3.2.4'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+plugins {
+    // SpringBootアップグレード
+    id "org.openrewrite.rewrite" version "6.8.4"
+//    id "io.spring.dependency-management" version "1.0.6.RELEASE"
+}
+
+apply plugin: 'java-library'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'jacoco'
+// SpringBootアップグレード
+apply plugin: "org.openrewrite.rewrite"
+
+// SpringBootアップグレード
+rewrite {
+    activeRecipe("org.openrewrite.java.spring.boot3.UpgradeSpringBoot_3_2")
+}
+
+group = 'com.hitachi.tdaip'
+
+version = '0.0.1'
+sourceCompatibility = '17'
+
+configurations {
+    developmentOnly
+    runtimeClasspath {
+        extendsFrom developmentOnly
+    }
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+//configurations.all {
+//  exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+//}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Spring Boot Starter
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework:spring-beans'
+
+    annotationProcessor 'org.projectlombok:lombok'
+	compileOnly 'org.projectlombok:lombok'
+    implementation "jakarta.persistence:jakarta.persistence-api:3.1.0"
+    implementation "jakarta.transaction:jakarta.transaction-api:2.0.1"
+    implementation 'org.postgresql:postgresql'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'com.h2database:h2'
+	testImplementation 'nl.jqno.equalsverifier:equalsverifier:3.15.2'
+
+    // RESTコントローラ用
+    testImplementation "org.junit.jupiter:junit-jupiter:5.10.2"
+    testImplementation "org.junit.jupiter:junit-jupiter:5.10.2"
+    testImplementation "org.junit.jupiter:junit-jupiter:5.10.2"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.10.2"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.10.2"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.10.2"
+    testImplementation "org.mockito:mockito-junit-jupiter:4.11.0"
+    implementation 'org.springframework:spring-web'
+
+    // Geometry操作用
+    implementation 'org.locationtech.jts.io:jts-io-common:1.19.0'
+    implementation 'org.locationtech.jts:jts-core:1.19.0'
+
+    // Jsonbtype
+    implementation 'javax.json.bind:javax.json.bind-api:1.0'
+
+    // ログ出力
+    //implementation 'org.slf4j:slf4j-api:2.0.5'
+
+    // SpringBootアップグレード
+//    rewrite("org.openrewrite.recipe:rewrite-spring:5.5.0")
+}
+
+//ソースコード付きのjar作成
+//jar {
+//  from ('./src/main/java') {
+//      include '**/*.java'
+//  }
+//}
+
+//javadoc,junit,jacoco対象クラスリスト
+def targetClasses = [
+    'com/hitachi/tdaip/Application',
+    'com/hitachi/tdaip/dem/dto/DemInfoDto',
+    'com/hitachi/tdaip/did/dto/DidInfoDto',
+    'com/hitachi/tdaip/dips/dto/DipsFlightPlanCircleInsertDto',
+    'com/hitachi/tdaip/dips/dto/DipsFlightPlanCommonInsertDto',
+    'com/hitachi/tdaip/dips/dto/DipsFlightPlanPolygonInsertDto',
+    'com/hitachi/tdaip/dips/dto/DipsNoFlyAreaCircleInsertDto',
+    'com/hitachi/tdaip/dips/dto/DipsNoFlyAreaCommonInsertDto',
+    'com/hitachi/tdaip/dips/dto/DipsNoFlyAreaPolygonInsertDto',
+    'com/hitachi/tdaip/dronedomainapi/constants/DroneDomainApiAirspaceAttribute',
+    'com/hitachi/tdaip/dronedomainapi/dto/AirAreaDto',
+    'com/hitachi/tdaip/dronedomainapi/dto/BarrierDto',
+    'com/hitachi/tdaip/dronedomainapi/dto/CommonResultDto',
+    'com/hitachi/tdaip/dronedomainapi/dto/RiskDto',
+    'com/hitachi/tdaip/dronedomainapi/dto/StartEndPoints2DDto',
+    'com/hitachi/tdaip/dronedomainapi/dto/WeatherDto',
+    'com/hitachi/tdaip/entity/AuthorizationInfoEntity',
+    'com/hitachi/tdaip/entity/DidInfoEntity',
+    'com/hitachi/tdaip/entity/DipsFlightPlanInfoEntity',
+    'com/hitachi/tdaip/entity/DipsNoFlyAreaInfoEntity',
+    'com/hitachi/tdaip/entity/DroneDomainApiAirspaceEntity',
+    'com/hitachi/tdaip/entity/DroneDomainApiAirspaceSpatialIdEntity',
+    'com/hitachi/tdaip/entity/ElevationInfoEntity',
+    'com/hitachi/tdaip/entity/FlyableAirspaceStreamAlterationRequestEntity',
+    'com/hitachi/tdaip/entity/FlyableAirspaceStreamAlterationRequestIgnoreObjectIdEntity',
+    'com/hitachi/tdaip/entity/FlyableAirspaceStreamAlterationRequestSpatialIdEntity',
+    'com/hitachi/tdaip/entity/GeoidHeightEntity',
+    'com/hitachi/tdaip/entity/MannedAircraftInfoEntity',
+    'com/hitachi/tdaip/entity/PlateauDataInfoEntity',
+    'com/hitachi/tdaip/entity/PrecipitationForecastEntity',
+    'com/hitachi/tdaip/entity/PrecipitationLiveEntity',
+    'com/hitachi/tdaip/entity/SpatialIdLocation2dEntity',
+    'com/hitachi/tdaip/entity/SpatialIdLocation3dEntity',
+    'com/hitachi/tdaip/entity/UserAuthorizationEntity',
+    'com/hitachi/tdaip/entity/UserInfoEntity',
+    'com/hitachi/tdaip/entity/VoxelInfoEntity',
+    'com/hitachi/tdaip/entity/WindSpeedForecastEntity',
+    'com/hitachi/tdaip/entity/WindSpeedLiveEntity',
+    'com/hitachi/tdaip/exception/TdAipException',
+    'com/hitachi/tdaip/mobilityintegration/config/RiskCalcCondition',
+    'com/hitachi/tdaip/mobilityintegration/config/RiskCalcConditionItem',
+    'com/hitachi/tdaip/mobilityintegration/config/RiskCalcConditionSettings',
+    'com/hitachi/tdaip/repository/DidInfoRepository',
+    'com/hitachi/tdaip/repository/DipsFlightPlanInfoRepository',
+    'com/hitachi/tdaip/repository/DipsFlightPlanInfoRepositoryCustom',
+    'com/hitachi/tdaip/repository/DipsNoFlyAreaInfoRepository',
+    'com/hitachi/tdaip/repository/DipsNoFlyAreaInfoRepositoryCustom',
+    'com/hitachi/tdaip/repository/DroneDomainApiAirspaceRepository',
+    'com/hitachi/tdaip/repository/DroneDomainApiAirspaceRepositoryCustom',
+    'com/hitachi/tdaip/repository/DroneDomainApiAirspaceSpatialIdRepository',
+    'com/hitachi/tdaip/repository/DroneDomainApiAirspaceSpatialIdRepositoryCustom',
+    'com/hitachi/tdaip/repository/ElevationInfoRepository',
+    'com/hitachi/tdaip/repository/FlyableAirspaceStreamAlterationRequestIgnoreObjectIdRepository',
+    'com/hitachi/tdaip/repository/FlyableAirspaceStreamAlterationRequestRepository',
+    'com/hitachi/tdaip/repository/FlyableAirspaceStreamAlterationRequestSpatialIdRepository',
+    'com/hitachi/tdaip/repository/GeoidHeightRepository',
+    'com/hitachi/tdaip/repository/MannedAircraftInfoRepository',
+    'com/hitachi/tdaip/repository/PlateauDataInfoRepository',
+    'com/hitachi/tdaip/repository/PlateauDataInfoRepositoryCustom',
+    'com/hitachi/tdaip/repository/PrecipitationForecastRepository',
+    'com/hitachi/tdaip/repository/PrecipitationForecastRepositoryCustom',
+    'com/hitachi/tdaip/repository/PrecipitationLiveRepository',
+    'com/hitachi/tdaip/repository/PrecipitationLiveRepositoryCustom',
+    'com/hitachi/tdaip/repository/PrecipitationRepositoryCustom',
+    'com/hitachi/tdaip/repository/SpatialIdLocation2dRepository',
+    'com/hitachi/tdaip/repository/SpatialIdLocation3dRepository',
+    'com/hitachi/tdaip/repository/SpatialIdLocation3dRepositoryCustom',
+    'com/hitachi/tdaip/repository/UserInfoRepository',
+    'com/hitachi/tdaip/repository/VoxelInfoRepository',
+    'com/hitachi/tdaip/repository/VoxelInfoRepositoryCustom',
+    'com/hitachi/tdaip/repository/WindSpeedForecastRepository',
+    'com/hitachi/tdaip/repository/WindSpeedForecastRepositoryCustom',
+    'com/hitachi/tdaip/repository/WindSpeedLiveRepository',
+    'com/hitachi/tdaip/repository/WindSpeedLiveRepositoryCustom',
+    'com/hitachi/tdaip/repository/WindSpeedRepositoryCustom',
+    'com/hitachi/tdaip/repository/impl/DidInfoRepositoryImpl',
+    'com/hitachi/tdaip/repository/impl/DipsFlightPlanInfoRepositoryImpl',
+    'com/hitachi/tdaip/repository/impl/DipsNoFlyAreaInfoRepositoryImpl',
+    'com/hitachi/tdaip/repository/impl/DroneDomainApiAirspaceRepositoryImpl',
+    'com/hitachi/tdaip/repository/impl/DroneDomainApiAirspaceSpatialIdRepositoryImpl',
+    'com/hitachi/tdaip/repository/impl/ElevationInfoRepositoryImpl',
+    'com/hitachi/tdaip/repository/impl/GeoidHeightRepositoryImpl',
+    'com/hitachi/tdaip/repository/impl/MannedAircraftInfoRepositoryImpl',
+    'com/hitachi/tdaip/repository/impl/PlateauDataInfoRepositoryCustomImpl',
+    'com/hitachi/tdaip/repository/impl/PrecipitationForecastRepositoryImpl',
+    'com/hitachi/tdaip/repository/impl/PrecipitationLiveRepositoryImpl',
+    'com/hitachi/tdaip/repository/impl/PrecipitationRepositoryImpl',
+    'com/hitachi/tdaip/repository/impl/SpatialIdLocation3dRepositoryImpl',
+    'com/hitachi/tdaip/repository/impl/VoxelInfoRepositoryImpl',
+    'com/hitachi/tdaip/repository/impl/WindSpeedForecastRepositoryImpl',
+    'com/hitachi/tdaip/repository/impl/WindSpeedLiveRepositoryImpl',
+    'com/hitachi/tdaip/repository/impl/WindSpeedRepositoryImpl',
+    'com/hitachi/tdaip/spatialid/dto/SpatialIdDto',
+    'com/hitachi/tdaip/spatialid/util/SpatialIdUtil',
+    'com/hitachi/tdaip/tdcitymodel/PlateauDataInfoDto',
+    'com/hitachi/tdaip/voxel/constants/VoxelInfoPartitioningTableName',
+    'com/hitachi/tdaip/voxel/constants/VoxelInfoPartitioningTableNameForFourThLayerPart',
+    'com/hitachi/tdaip/voxel/dto/DataType',
+    'com/hitachi/tdaip/voxel/dto/DataValueBuilding',
+    'com/hitachi/tdaip/voxel/dto/DataValueDem',
+    'com/hitachi/tdaip/voxel/dto/DataValueDid',
+    'com/hitachi/tdaip/voxel/dto/DataValueFlightPlan',
+    'com/hitachi/tdaip/voxel/dto/DataValueMannedAircraftInfo',
+    'com/hitachi/tdaip/voxel/dto/DataValuePrecipitation',
+    'com/hitachi/tdaip/voxel/dto/DataValueRisk',
+    'com/hitachi/tdaip/voxel/dto/DataValueWindSpeed',
+    'com/hitachi/tdaip/voxel/dto/SpatialId',
+    'com/hitachi/tdaip/voxel/dto/VoxelInfoDto',
+    'com/hitachi/tdaip/voxel/util/VoxelInfoUtil',
+    'com/hitachi/tdaip/weather/util/WeatherUtil',
+]
+
+task delombok(type: JavaExec, dependsOn: compileJava) {
+    ext.outputDir = file("$buildDir/delombok")
+    classpath = sourceSets.main.compileClasspath + sourceSets.main.output.generatedSourcesDirs
+    main = 'lombok.launch.Main'
+    args('delombok', 'src/main/java', '-d', outputDir)
+    doFirst {
+        outputDir.deleteDir()
+    }
+}
+
+// JavadocでJava8以降のタグを出力するためのオプション
+def javadocTagOptions = ["apiNote:a:API Note:", "implSpec:a:Implementation Requirements:", "implNote:a:Implementation Note:"]
+// Javadoc生成時のクラスパス
+def javadocClasspath = sourceSets.main.compileClasspath + sourceSets.main.output.generatedSourcesDirs + files("$buildDir/delombok")
+
+javadoc {
+    dependsOn([compileJava, delombok])
+    options.charSet = 'UTF-8'
+    options.encoding = 'UTF-8'
+    options.docEncoding = 'UTF-8'
+    failOnError = false
+    classpath = javadocClasspath
+    classpath += sourceSets.test.compileClasspath
+    source = delombok.outputDir
+    source +=sourceSets.test.allJava
+    options.tags = javadocTagOptions
+    //JavadocMemberLevelでアクセス修飾子を以下の
+    //PACKAGE、PRIVATE、PROTECTED、PUBLICから選択可能
+    //https://docs.gradle.org/current/javadoc/org/gradle/external/javadoc/JavadocMemberLevel.html
+    options.setMemberLevel(JavadocMemberLevel.PACKAGE)
+    //テストクラスのみのJavadocを出力する場合は以下のコメントを外す
+    //includes = ['**/**Test.java']
+    //出力するクラスの.javaを指定
+    include(
+        //メインクラス
+//        targetClasses.collect{it + '.java'}
+//    +
+        //テストクラス
+        targetClasses.collect{it + 'Test*.java'}
+    )
+}
+
+// コンパイル時に使用する文字コードをUTF-8で固定する
+tasks.withType(AbstractCompile).each { it.options.encoding = 'UTF-8' }
+tasks.withType(Test) {
+    systemProperty "file.encoding", "UTF-8"
+}
+
+test {
+    //並列実行数
+    maxParallelForks 4
+    useJUnitPlatform()
+    //テストクラスの.classを指定
+    include(targetClasses.collect{it + 'Test*.class'})
+//  include 'com/hitachi/tdaip/weatherandcopilot/provider/model/**/*Test.class'
+//  testLogging {
+//      events 'standard_out', 'standard_error'
+//  }
+}
+
+//コンパイル対象外の.javaを指定
+//compileTestJava {
+//'com/hitachi/tdaip/weatherandcopilot/service/importer/impl/WniWindSpeedForecastImporterImplTest.java',
+//}
+
+test.finalizedBy jacocoTestReport
+
+jacocoTestReport {
+    reports {
+        html.enabled = true
+    }
+    classDirectories.setFrom(classDirectories.files.collect {
+    //メインクラスの.classを指定
+      fileTree(dir: it, include: targetClasses.collect{it + '.class'})
+    })
+    doFirst {
+       file(reports.html.outputLocation).deleteDir()
+    }
+}

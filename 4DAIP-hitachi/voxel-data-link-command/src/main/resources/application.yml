@@ -1,0 +1,148 @@
+spring:
+  main:
+    # tomcatを起動しない
+    web-application-type: none
+    allow-bean-definition-overriding: true
+  # JDBC Datasource設定
+  datasource:
+    driverClassName: org.postgresql.Driver
+    username: postgres
+    password: postgres
+    url: jdbc:postgresql://localhost:5432/td_aip?rewriteBatchedStatements=true
+#    url: jdbc:postgresql://存在しないDB:5432/td_aip?rewriteBatchedStatements=true
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+#    properties:
+#      hibernate:
+#        show_sql: true
+#        use_sql_comments: true
+#        format_sql: true
+
+# データベース.最大リトライ回数
+database.max-retry-count: 3
+
+logging:
+  level:
+    com.hitachi.tdaip: debug
+#    org.hibernate.SQL: debug
+#    org.hibernate.type: trace
+#    org.hibernate.type.descriptor.sql.BasicBinder: trace
+
+# ３次元都市モデル
+tdCityModel:
+  # 空港
+  airport:
+    # バッファ距離※カンマ(,)区切りで複数指定可、昇順
+#    bufferDistances: 300,24000,48000
+    # ローカルテスト用(AT範囲の南北は約7[km]、東西は約6[km]のため2022年度のCTに合わせて短くした：300→100,24000→200,48000→300) バッファ距離※カンマ(,)区切りで複数指定可、昇順
+#    bufferDistances: 300,1200,2400
+    bufferDistances: 16,32,48
+
+# 実証
+experiment:
+  # 空間ID
+  spatial-id:
+    z: 21
+  # 空域
+  airspace:
+# AT範囲(狭くしたダム側)
+    # 緯度
+    lat:
+      # 最大：北
+      max: 37.631955
+      # 最小:南
+      min: 37.591413
+    # 経度
+    lon:
+      # 最大：東
+      max: 140.9222
+      # 最小：西
+      min: 140.8898
+    # 海抜高度
+    elv:
+      # 最大：高
+      max: 658.79
+      # 最小：低
+      min: -1
+## 最小CT
+#    # 緯度
+#    lat:
+#      # 最小:南
+#      min: 37.6093440
+#      # 最大：北
+#      max: 37.6095750
+#    # 経度
+#    lon:
+#      # 最小：西
+#      min: 140.9209696
+#      # 最大：東
+#      max: 140.9212726
+#    # 海抜高度
+#    elv:
+#      # 最小：低 F=0
+#      min: 0
+#      # 最大：高 F=3
+#      max: 10
+#   # AT
+#     # 緯度
+#     lat:
+#       # 最大：北
+#       max: 37.670251
+#       # 最小:南
+#       min: 37.604984
+#     # 経度
+#     lon:
+#       # 最大：東
+#       max: 140.9889
+#       # 最小：西
+#       min: 140.9203
+#     # 海抜高度
+#     elv:
+#       # 最小：低
+#       min: 0
+#       # 最大：高
+#       max: 200
+#  # AT範囲(海岸線側)
+#    # 緯度
+#    lat:
+#      # 最大：北
+#      max: 37.648762
+#      # 最小:南
+#      min: 37.551926
+#    # 経度
+#    lon:
+#      # 最大：東
+#      max: 141.0349
+#      # 最小：西
+#      min: 140.9966
+#    # 海抜高度
+#    elv:
+#      # 最大：高
+#      max: 268.84
+#      # 最小：低
+#      min: -1.66
+
+# 取得機能
+importer:
+  
+# SRID
+srid:
+  # 地理座標系
+  geographic:
+    # 次元
+    dimension:
+      # 2次元(6668:JGD2011)
+      two: 6668
+      # 3次元(6697:JGD2011 + JGD2011 (vertical) height)
+      three: 6697
+# ボクセル生成
+create-voxel:
+  #有人機 
+  manned-aircraft-info:
+    #バッファ距離[m]
+    bufferDistances: 50
+  #人口集中地区
+  did:
+    #有効期限年数
+    valid-year: 20
+  

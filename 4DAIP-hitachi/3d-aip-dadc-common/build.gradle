@@ -1,0 +1,110 @@
+buildscript {
+	ext {
+		springBootVersion = '2.7.5'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath("com.google.protobuf:protobuf-gradle-plugin:0.9.1")
+	}
+}
+
+apply plugin: 'java-library'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'com.google.protobuf'
+apply plugin: 'jacoco'
+
+//plugins {
+//	id 'java-library'
+//   id 'com.google.protobuf' version '0.9.1'
+//	id 'org.springframework.boot' version '2.7.5'
+//	id 'io.spring.dependency-management' version '1.1.0'
+//}
+
+group = 'com.hitachi.tdaip'
+
+version = '0.0.1'
+sourceCompatibility = '17'
+
+repositories {
+	// Use jcenter for resolving dependencies.
+	// You can declare any Maven/Ivy/file repository here.
+	//jcenter()
+	mavenCentral()
+}
+
+def grpcVersion = '1.51.0'
+def protobufVersion = '3.21.7'
+def protocVersion = protobufVersion
+
+dependencies {
+	runtimeOnly "io.grpc:grpc-netty-shaded:${grpcVersion}"
+	implementation "io.grpc:grpc-protobuf:${grpcVersion}"
+	implementation "io.grpc:grpc-stub:${grpcVersion}"
+	//implementation 'io.github.lognet:grpc-client-spring-boot-starter:4.9.1'
+	compileOnly 'org.apache.tomcat:annotations-api:6.0.53'
+	implementation 'org.springframework.boot:spring-boot-starter'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	implementation 'org.gdal:gdal:3.5.0'
+
+	// Geometry操作用
+	implementation 'org.locationtech.jts.io:jts-io-common:1.19.0'
+	implementation 'org.locationtech.jts:jts-core:1.19.0'
+}
+bootJar {
+	enabled = false
+}
+protobuf {
+	protoc {
+		artifact = "com.google.protobuf:protoc:${protocVersion}"
+	}
+	plugins {
+		grpc {
+			artifact = "io.grpc:protoc-gen-grpc-java:${grpcVersion}"
+		}
+	}
+	generateProtoTasks {
+		all()*.plugins {
+			grpc {}
+		}
+	}
+}
+
+javadoc {
+	options.charSet = 'UTF-8'
+	options.encoding = 'UTF-8'
+	options.docEncoding = 'UTF-8'
+	failOnError = false
+	classpath += sourceSets.test.compileClasspath
+	source += sourceSets.test.allJava
+	//JavadocMemberLevelでアクセス修飾子を以下の
+	//PACKAGE、PRIVATE、PROTECTED、PUBLICから選択可能
+	//https://docs.gradle.org/current/javadoc/org/gradle/external/javadoc/JavadocMemberLevel.html
+	options.setMemberLevel(JavadocMemberLevel.PACKAGE)
+	//テストクラスのみのJavadocを出力する場合は以下のコメントを外す
+	//includes = ['**/**Test.java']
+}
+
+// コンパイル時に使用する文字コードをUTF-8で固定する
+tasks.withType(AbstractCompile).each { it.options.encoding = 'UTF-8' }
+tasks.withType(Test) {
+	systemProperty "file.encoding", "UTF-8"
+}
+
+test {
+	useJUnitPlatform()
+}
+
+
+test.finalizedBy jacocoTestReport
+
+jacocoTestReport {
+	reports {
+		html.enabled = true
+	}
+}

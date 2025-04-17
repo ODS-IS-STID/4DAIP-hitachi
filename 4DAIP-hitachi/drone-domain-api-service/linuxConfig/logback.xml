@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE logback>
+<configuration>
+  <property name="LOG_DIR" value="/opt/drone-domain-api-service/log" />
+
+  <appender name="MAIN_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${LOG_DIR}/drone-domain-api-service.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${LOG_DIR}/drone-domain-api-service-%d{yyyyMMdd}.log.gz</fileNamePattern>
+      <maxHistory>30</maxHistory>
+    </rollingPolicy>
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%thread] %logger{50} --- %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="ERROR_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${LOG_DIR}/drone-domain-api-service_ERROR.log</file>
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+        <level>ERROR</level>
+    </filter>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${LOG_DIR}/drone-domain-api-service_ERROR-%d{yyyyMMdd}.log.gz</fileNamePattern>
+      <maxHistory>30</maxHistory>
+    </rollingPolicy>
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%thread] %logger{50} --- %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <logger name="jp.co.hitachi.tdaip" level="info" />
+  <logger name="org.zalando.logbook.Logbook" level="info" />
+  <logger name="org.springframework.jdbc" level="info" />
+  <root level="info">
+    <appender-ref ref="MAIN_LOG" />
+    <appender-ref ref="ERROR_LOG" />
+  </root>
+</configuration>
+

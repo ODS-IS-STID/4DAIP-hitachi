@@ -1,0 +1,52 @@
+spring:
+  main:
+    # tomcatを起動しない
+    web-application-type: none
+  # JDBC Datasource設定
+  datasource:
+    driverClassName: org.postgresql.Driver
+    username: postgres
+    password: postgres
+    url: jdbc:postgresql://tdaip-ct-copy-db01.ciabtg6bogeb.ap-northeast-1.rds.amazonaws.com:5432/td_aip?rewriteBatchedStatements=true?currentSchema=td_aips
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+#    properties:
+#      hibernate:
+#        show_sql: true
+#        use_sql_comments: true
+#        format_sql: true
+
+logging:
+  level:
+    com.hitachi.tdaip: debug
+#    org.hibernate.SQL: debug
+#    org.hibernate.type: trace
+#    org.hibernate.type.descriptor.sql.BasicBinder: trace
+
+tdCityModel:
+  airport:
+    bufferDistances: 300,24000,48000
+
+# ボクセル生成
+create-voxel:
+  #人口集中地区
+  did:
+    #有効期限年数
+    valid-year: 20
+  
+# SRID
+srid:
+  # 地理座標系
+  geographic:
+    # 次元
+    dimension:
+      # 2次元(6668:JGD2011)
+      two: 6668
+      # 3次元(6697:JGD2011 + JGD2011 (vertical) height)
+      three: 6697
+
+# 実証
+experiment:
+  # 空間ID
+  spatial-id:
+    z: 20

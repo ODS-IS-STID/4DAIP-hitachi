@@ -1,0 +1,227 @@
+spring:
+  main:
+    # tomcatを起動しない
+    web-application-type: none
+    allow-bean-definition-overriding: true
+  # JDBC Datasource設定
+  datasource:
+    driverClassName: org.postgresql.Driver
+    username: postgres
+    password: postgres
+    url: jdbc:postgresql://tdaip-ct-copy-db01.ciabtg6bogeb.ap-northeast-1.rds.amazonaws.com:5432/td_aip?rewriteBatchedStatements=true
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+#    properties:
+#      hibernate:
+#        show_sql: true
+#        use_sql_comments: true
+#        format_sql: true
+
+# データベース.最大リトライ回数
+database.max-retry-count: 3
+
+logging:
+  level:
+    com.hitachi.tdaip: debug
+#    org.hibernate.SQL: debug
+#    org.hibernate.type: trace
+#    org.hibernate.type.descriptor.sql.BasicBinder: trace
+
+# ３次元都市モデル
+tdCityModel:
+  # 空港
+  airport:
+    # バッファ距離※カンマ(,)区切りで複数指定可、昇順
+    bufferDistances: 300,24000,48000
+
+# 実証
+experiment:
+  # 空間ID
+  spatial-id:
+    z: 21
+  # 空域
+  airspace:
+# AT範囲(狭くしたダム側)
+    # 緯度
+    lat:
+      # 最大：北
+      max: 37.631955
+      # 最小:南
+      min: 37.591413
+    # 経度
+    lon:
+      # 最大：東
+      max: 140.9222
+      # 最小：西
+      min: 140.8898
+    # 海抜高度
+    elv:
+      # 最大：高
+      max: 658.79
+      # 最小：低
+      min: -1
+#  # AT範囲(海岸線側)
+#    # 緯度
+#    lat:
+#      # 最大：北
+#      max: 37.648762
+#      # 最小:南
+#      min: 37.551926
+#    # 経度
+#    lon:
+#      # 最大：東
+#      max: 141.0349
+#      # 最小：西
+#      min: 140.9966
+#    # 海抜高度
+#    elv:
+#      # 最大：高
+#      max: 268.84
+#      # 最小：低
+#      min: -1.66
+# 取得機能
+importer:
+  # 有人機情報
+  manned-aircraft-info:
+    # 取得機能  有効(true) / 無効(false)
+    active: true
+    # 更新間隔 ミリ 秒：1分=1*60*1000=60000
+    interval: 60000
+  # 気象
+  weather:
+    # 風速
+    wind-speed:
+      # 実況
+      live:
+        # 取得機能  有効(true) / 無効(false)
+        active: false
+        # 更新間隔 ミリ 秒：5分=5*60*1000=300000
+        interval: 300000
+        # 対地高度（,区切り)
+        alts: 10,30,50,100,150,200
+#        alts: 10,30
+        # 選択したSDSP
+        selected-sdsp: wni
+      # 予報
+      forecast:
+        # 取得機能  有効(true) / 無効(false)
+        active: false
+#        active: ${importer.weather.wind-speed.live.active}
+        # 更新間隔 ミリ 秒：30分=30*60*000=1800000
+        interval: 1800000
+        # 対地高度（,区切り)
+#        alts: 10,30,50,100,150,200
+        alts: ${importer.weather.wind-speed.live.alts}
+        # 予報加算時間（分を,区切り):直近の予測時刻の30分後、1時間30分後、2時間30分後、3時間30分後、4時間30分後、5時間30分後、6時間30分後、7時間30分後
+        #  → 30、60+30=90、120+30=150、180+30=210、240+30=270、300+30=330、360+30=390、420+30=450分後
+        forecast-add-times: 30,90,150,210,270,330,390,450
+#        forecast-add-times: 30,90
+        # 選択したSDSP
+#        selected-sdsp: wni
+        selected-sdsp: ${importer.weather.wind-speed.live.selected-sdsp}
+    # 降水量
+    precipitation:
+      # 対地高度
+      alt: 0
+      # 実況
+      live:
+        # 取得機能  有効(true) / 無効(false)
+        active: false
+        # 更新間隔 ミリ 秒：5分=5*60*1000=300000
+#        interval: 300000
+        interval: ${importer.weather.wind-speed.live.interval}
+        # 選択したSDSP
+        selected-sdsp: wni
+#        selected-sdsp: ${importer.weather.wind-speed.live.selected-sdsp}
+      # 予報
+      forecast:
+        # 取得機能  有効(true) / 無効(false)
+        active: false
+#        active: ${importer.weather.precipitation.live.active}
+        # 更新間隔 ミリ 秒：30分=30*60*000=1800000
+#        interval: 1800000
+        interval: ${importer.weather.wind-speed.forecast.interval}
+        # 予報加算時間（分を,区切り):直近の予測時刻の30分後、1時間30分後、2時間30分後、3時間30分後、4時間30分後、5時間30分後、6時間30分後、7時間30分後
+        #  → 30、60+30=90、120+30=150、180+30=210、240+30=270、300+30=330、360+30=390、420+30=450分後
+        forecast-add-times: 30,90,150,210,270,330,390,450
+#        forecast-add-times: ${importer.weather.wind-speed.live.forecast-add-times}
+        # 選択したSDSP
+#        selected-sdsp: wni
+        selected-sdsp: ${importer.weather.wind-speed.live.selected-sdsp}
+    # SDSP
+    sdsp:
+      # 選択肢
+      option:
+        # 日本気象協会
+        jwa: jwa
+        # ウェザーニューズ
+        wni: wni
+      # 日本気象協会
+      jwa:
+        # エリア(仮)
+        area: 421250
+      # ウェザーニューズ
+      wni:
+        # 地域
+        area:
+          # 緯度
+          lat:
+            # 最小:南
+            min: ${experiment.airspace.lat.min}
+            # 最大：北
+            max: ${experiment.airspace.lat.max}
+          # 経度
+          lon:
+            # 最小：西
+            min: ${experiment.airspace.lon.min}
+            # 最大：東
+            max: ${experiment.airspace.lon.max}
+        # 気象要素
+        element:
+          # 東西風速
+          ugrd: ugrd
+          # 南北風速
+          vgrd: vgrd
+          # 降水量
+          apcp: apcp
+# SRID
+srid:
+  # 地理座標系
+  geographic:
+    # 次元
+    dimension:
+      # 2次元(6668:JGD2011)
+      two: 6668
+      # 3次元(6697:JGD2011 + JGD2011 (vertical) height)
+      three: 6697
+# ボクセル生成
+create-voxel:
+  #有人機 
+  manned-aircraft-info:
+    #バッファ距離[m]
+    bufferDistances: 50
+  #人口集中地区
+  did:
+    #有効期限年数
+    valid-year: 20
+  # 風速実況
+  wind-speed-live:
+    # 空間IDのFの間隔※1以上の整数
+    f-interval: 4
+    # 一時テーブルの最大メモリ使用量
+    temp-buffers: 500MB
+  # 風速予報
+  wind-speed-forecast:
+    # 空間IDのFの間隔※1以上の整数
+    f-interval: 1
+    # 一時テーブルの最大メモリ使用量
+    temp-buffers: 3GB
+  # 降水量実況
+  precipitation-live:
+    # 空間IDのFの間隔※1以上の整数
+    # 一時テーブルの最大メモリ使用量
+    temp-buffers: 100MB
+  # 降水量予報
+  precipitation-forecast:
+    # 一時テーブルの最大メモリ使用量
+    temp-buffers: 400MB

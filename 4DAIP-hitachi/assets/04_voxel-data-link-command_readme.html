@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>04_voxel-data-link-command_readme.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="voxel-data-link-command">voxel-data-link-command</h1>
+<p>voxel-data-link-commandプロジェクトの簡単な説明をここに記載します。</p>
+<h2 id="%E7%9B%AE%E6%AC%A1">目次</h2>
+<ul>
+<li><a href="#%E6%A6%82%E8%A6%81">概要</a></li>
+<li><a href="#%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB">インストール</a></li>
+<li><a href="#%E4%BD%BF%E3%81%84%E6%96%B9">使い方</a></li>
+<li><a href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A0%85">注意事項</a></li>
+<li><a href="#%E3%83%A9%E3%82%A4%E3%82%BB%E3%83%B3%E3%82%B9">ライセンス</a></li>
+</ul>
+<h2 id="%E6%A6%82%E8%A6%81">概要</h2>
+<p>登録した人口集中地区情報や標高情報等を、空間ボクセル情報としてDBに登録する機能です。</p>
+<h2 id="%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB">インストール</h2>
+<p>このプロジェクトをローカル環境にインストールする手順を記載します。</p>
+<ol>
+<li>git clone後</li>
+</ol>
+<pre class="hljs"><code><div><span class="hljs-built_in">cd</span> voxel-data-link-command
+
+<span class="hljs-comment"># プロジェクトのビルド</span>
+<span class="hljs-comment"># ビルドすることで実行可能なjarファイルおよびクラスファイルを生成</span>
+./gradlew build  
+
+<span class="hljs-comment"># プロジェクトをビルドしてJARファイルを作成します。</span>
+./gradlew bootJar
+</div></code></pre>
+<h2 id="%E4%BD%BF%E3%81%84%E6%96%B9">使い方</h2>
+<p>プロジェクトの使い方や基本的な使用例を記載します。</p>
+<ol>
+<li>application.ymlの修正
+ボクセルのズーム率や生成する範囲等を指定してください
+※<a href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A0%85">注意事項</a>参照</li>
+</ol>
+<p>変更例</p>
+<pre class="hljs"><code><div># databaseのURLに変更ください
+    url: jdbc:postgresql://localhost:5432/td_aip?rewriteBatchedStatements=true
+
+#　ボクセル生成における設定を変更してください（例 ズーム率、緯度、経度など）
+
+# 実証
+experiment:
+  spatial-id:
+    # ズーム率を設定ください。推奨20
+    z: 20
+  airspace:
+    # ボクセル生成範囲を設定下さい
+    # 緯度
+    lat:
+      # 最大：北
+      max: 37.631955
+      # 最小:南
+      min: 37.591413
+    # 経度
+    lon:
+      # 最大：東
+      max: 140.9222
+      # 最小：西
+      min: 140.8898
+    # 海抜高度
+    elv:
+      # 最大：高
+      max: 200
+      # 最小：低
+      min: -1
+
+</div></code></pre>
+<ol start="2">
+<li>人口集中地区情報ボクセル生成処理</li>
+</ol>
+<p>以下、コマンドで起動します。</p>
+<pre class="hljs"><code><div>java -jar voxel-data-link-command-0.0.1.jar --spring.config.location=application.yml -did ddb07cdf-ebb7-4ed5-bba6-6f5f25864a9e,fcdc9a82-71f5-4d5f-b370-b8a2374efe84,5c6c88f3-a464-4c8f-91b7-c5d39aab3d30,0e42676d-9459-4e53-bc90-2e44dbb4cab5
+</div></code></pre>
+<p>※UUID（以下赤文字）はdid_infoテーブルのdata_idカラムにあり、複数指定時の区切り文字は「,」</p>
+<p><span style="color: tomato;"> ddb07cdf-ebb7-4ed5-bba6-6f5f25864a9e,fcdc9a82-71f5-4d5f-b370-b8a2374efe84,5c6c88f3-a464-4c8f-91b7-c5d39aab3d30,0e42676d-9459-4e53-bc90-2e44dbb4cab5 </span></p>
+<ol start="3">
+<li>標高情報ボクセル生成処理</li>
+</ol>
+<p>以下のコマンドを実行します。
+※application.ymlは登録した標高情報の範囲内であることを確認</p>
+<pre class="hljs"><code><div># 各自の環境に合わせて適宜変更ください
+java -jar voxel-data-link-command-0.0.1.jar --spring.config.location=application.yml -dem
+</div></code></pre>
+<ol start="4">
+<li>3次元都市モデルボクセル生成処理</li>
+</ol>
+<p>①UUIDリストの作成</p>
+<p>例</p>
+<ul>
+<li>UUIIDリストのパス：/opt/3d-city-model-data-link/log/city-model-uuidlist.txt</li>
+<li>接続先のDBホスト：localhost</li>
+<li>接続先のDBポート：5432</li>
+<li>接続先のDBユーザ：postgres</li>
+<li>接続先のDB名：td_aip</li>
+</ul>
+<p>以下のコマンドを実行します。</p>
+<pre class="hljs"><code><div>※psqlコマンド実行直後にパスワード入力あり
+cd /opt/3d-city-model-data-link/log/
+psql --host=localhost --port=5432 --username=postgres --password --dbname=td_aip -c &quot;COPY (select data_id from td_aip.plateau_data_info) TO STDOUT&quot; &gt; citymodel_uuidlist.txt
+</div></code></pre>
+<p>②起動</p>
+<p>以下のコマンドを実行します。</p>
+<p>callcityvoxel.shはtoolフォルダにあります。</p>
+<p>voxel-data-link-command-0.0.1.jarと同じフォルダで実行ください。</p>
+<pre class="hljs"><code><div># 各自の環境に合わせて適宜変更ください(Windowsの場合は、Git Bashで起動)
+bash callcityvoxel.sh /opt/3d-city-model-data-link/log/city-model-uuidlist.txt 100 | tee log/voxel-data-link-command.log
+</div></code></pre>
+<p>※人口集中地区ボクセル生成同様に、UUID指定での実行も可能<br>
+　以下、コマンドを実行</p>
+<pre class="hljs"><code><div>java -jar voxel-data-link-command-0.0.1.jar --spring.config.location=application.yml -city ddb07cdf-ebb7-4ed5-bba6-6f5f25864a9e,fcdc9a82-71f5-4d5f-b370-b8a2374efe84,5c6c88f3-a464-4c8f-91b7-c5d39aab3d30,0e42676d-9459-4e53-bc90-2e44dbb4cab5
+</div></code></pre>
+<p>※UUID（以下赤文字）はplateau_infoテーブルのdata_idカラムにあり、複数指定時の区切り文字は「,」</p>
+<p><span style="color: tomato;"> ddb07cdf-ebb7-4ed5-bba6-6f5f25864a9e,fcdc9a82-71f5-4d5f-b370-b8a2374efe84,5c6c88f3-a464-4c8f-91b7-c5d39aab3d30,0e42676d-9459-4e53-bc90-2e44dbb4cab5 </span></p>
+<h2 id="%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A0%85">注意事項</h2>
+<p>プロジェクト使用時の注意事項を記載します。</p>
+<ul>
+<li>人口集中地区情報や3次元都市モデル情報がボクセル情報を生成する範囲内であること</li>
+<li>標高情報がボクセル生成範囲をカバーしていること</li>
+</ul>
+<p>※満たしていない場合、ボクセル情報が生成されないため、注意が必要</p>
+<h2 id="%E3%83%A9%E3%82%A4%E3%82%BB%E3%83%B3%E3%82%B9">ライセンス</h2>
+<p>このプロジェクトのライセンス情報を記載します。</p>
+<p>このプロジェクトは MIT ライセンスの下で公開されています。詳細については、LICENSE ファイルを参照してください。</p>
+
+</body>
+</html>

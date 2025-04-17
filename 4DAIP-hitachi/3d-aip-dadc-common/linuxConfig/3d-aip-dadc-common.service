@@ -1,0 +1,13 @@
+[Unit]
+Description=application to manage 3d-aip-dadc-common
+After=syslog.target
+
+[Service]
+User=root
+ExecStart=/usr/bin/bash /opt/grpcserver/gRpcServer/StartServer.sh
+#ExecStart=/usr/bin/python3.10 /opt/grpcserver/gRpcServer/SpatialIdServer.py
+Restart=always
+SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target

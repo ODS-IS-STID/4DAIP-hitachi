@@ -1,0 +1,21 @@
+spring:
+  main:
+    # tomcatを起動しない
+    web-application-type: none
+  # JDBC Datasource設定
+  datasource:
+    driverClassName: org.postgresql.Driver
+    username: postgres
+    password: postgres
+    url: jdbc:postgresql://localhost:5432/td_aip?rewriteBatchedStatements=true
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.type.EnumType: trace
+    org.hibernate.type.descriptor.sql.BasicBinder: trace
+    

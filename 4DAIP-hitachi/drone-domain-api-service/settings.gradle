@@ -1,0 +1,6 @@
+rootProject.name = 'drone-domain-api-service'
+
+include ':3d-aip-common'
+project(':3d-aip-common').projectDir = new File(settingsDir, '../3d-aip-common/')
+include ':mobility-integration-manage'
+project(':mobility-integration-manage').projectDir = new File(settingsDir, '../mobility-integration-manage/')

@@ -1,0 +1,8 @@
+rootProject.name = 'voxel-data-link-command'
+
+include ':3d-aip-common'
+project(':3d-aip-common').projectDir = new File(settingsDir, '../3d-aip-common/')
+include ':voxel-data-link'
+project(':voxel-data-link').projectDir = new File(settingsDir, '../voxel-data-link/')
+include ':mobility-integration-manage'
+project(':mobility-integration-manage').projectDir = new File(settingsDir, '../mobility-integration-manage/')

@@ -1,0 +1,118 @@
+spring:
+  main:
+    # tomcatを起動しない
+    web-application-type: none
+  # JDBC Datasource設定
+  datasource:
+    driverClassName: org.postgresql.Driver
+    username: postgres
+    password: postgres
+    url: jdbc:postgresql://localhost:5433/3d_aip?rewriteBatchedStatements=true&currentSchema=3d_aip
+#    properties:
+#      hibernate:
+#        show_sql: true
+#        use_sql_comments: true
+#        format_sql: true
+
+logging:
+  level:
+    com.hitachi.tdaip: debug
+    org.hibernate.SQL: debug
+#    org.hibernate.type: trace
+#    org.hibernate.type.descriptor.sql.BasicBinder: trace
+
+# 実証
+experiment:
+  # 空間ID
+  spatial-id:
+    z: 20
+  # 空域
+  airspace:
+    # 緯度
+    lat:
+      # 最小:南
+      min: 37.491688
+      # 最大：北
+      max: 37.666107
+    # 経度
+    lon:
+      # 最小：西
+      min: 140.9842737
+      # 最大：東
+      max: 141.0577193
+    # 海抜高度
+    elv:
+      # 最小：低
+      min: 0
+      # 最大：高
+      max: 200
+
+risk-calc-condition:
+  conditions:
+    -
+      # 地上リスク算出条件#3
+      risk-type: ground
+      risk-condition-id: 3
+      risk-value: 3
+      adjust-value: -1
+      items:
+        -
+          data-type: "01010000"
+          buffer-flag: false
+          buffer-distance: null
+          #data-value-condition: "(data_value->'speed')::FLOAT >= 5"
+          data-value-condition: null
+    -
+      # 地上リスク算出条件#1
+      risk-type: ground
+      risk-condition-id: 1
+      risk-value: 1
+      adjust-value: null
+      items:
+        -
+          data-type: null
+          buffer-flag: false
+          buffer-distance: null
+          #data-value-condition: "(data_value->'speed')::FLOAT >= 5"
+          data-value-condition: null
+    -
+      # 上空リスク算出条件#13
+      risk-type: air
+      risk-condition-id: 13
+      risk-value: 9
+      adjust-value: -1
+      items:
+        -
+          data-type: "01030300"
+          buffer-flag: false
+          buffer-distance: null
+          data-value-condition: ""
+        -
+          data-type: "01030300"
+          buffer-flag: true
+          buffer-distance: 300.0
+          data-value-condition: ""
+    -
+      # 上空リスク算出条件#12
+      risk-type: air
+      risk-condition-id: 12
+      risk-value: 9
+      adjust-value: -1
+      items:
+        -
+          data-type: "01030100"
+          buffer-flag: false
+          buffer-distance: 0.0
+          data-value-condition: ""
+    -
+      # 上空リスク算出条件#11
+      risk-type: air
+      risk-condition-id: 11
+      risk-value: 9
+      adjust-value: -1
+      items:
+        -
+          data-type: "01020000"
+          buffer-flag: false
+          buffer-distance: 0.0
+          data-value-condition: ""

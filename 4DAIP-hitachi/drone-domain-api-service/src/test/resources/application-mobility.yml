@@ -1,0 +1,298 @@
+spring:
+  main:
+    # tomcatを起動しない
+    web-application-type: none
+    allow-bean-definition-overriding: true
+  # JDBC Datasource設定
+  datasource:
+    driverClassName: org.postgresql.Driver
+    username: postgres
+    password: postgres
+    url: jdbc:postgresql://localhost:5432/td_aip?rewriteBatchedStatements=true
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+#    properties:
+#      hibernate:
+#        show_sql: true
+#        use_sql_comments: true
+#        format_sql: true
+
+# データベース.最大リトライ回数
+database.max-retry-count: 3
+
+#logging:
+#  level:
+#    com.hitachi.tdaip: debug
+#    org.hibernate.SQL: debug
+#    org.hibernate.type: trace
+#    org.hibernate.type.descriptor.sql.BasicBinder: trace
+
+# 実証
+experiment:
+  # 空間ID
+  spatial-id:
+    # ズーム
+    z: 20
+  # 空域
+  airspace:
+  # AT
+    # 緯度
+    lat:
+      # 最大：北
+      max: 37.670251
+      # 最小:南
+      min: 37.604984
+    # 経度
+    lon:
+      # 最大：東
+      max: 140.9889
+      # 最小：西
+      min: 140.9203
+#  # さくら薬局周辺地域
+#    # 緯度
+#    lat:
+#      # 最大：北
+#      max: 37.64047083
+#      # 最小:南
+#      min: 37.62857587
+#    # 経度
+#    lon:
+#      # 最大：東
+#      max: 140.9648895
+#      # 最小：西
+#      min: 140.9533024
+# Pでの確認用
+#    # 緯度
+#    lat:
+#      # 最小:南
+#      min: 37.628455
+#      # 最大：北
+#      max: 37.632504
+#    # 経度
+#    lon:
+#      # 最小：西
+#      min: 140.955465
+#      # 最大：東
+#      max: 140.959762
+#    # 海抜高度
+    elv:
+      # 最小：低
+      min: 0
+      # 最大：高
+      max: 200
+risk-calc-condition:
+  conditions:
+    -
+      # 地上リスク算出条件#3 人口集中地区
+      risk-type: ground
+      risk-condition-id: 3
+      risk-value: 5
+      adjust-value: -1
+      items:
+        -
+          data-type: "01010100"
+          buffer-flag: false
+          buffer-distance: null
+          #data-value-condition: "(data_value->'speed')::FLOAT >= 5"
+          data-value-condition: null
+    -
+      # 地上リスク算出条件#1
+      risk-type: ground
+      risk-condition-id: 1
+      risk-value: 1
+      adjust-value: null
+      items:
+        -
+          data-type: null
+          buffer-flag: false
+          buffer-distance: null
+          #data-value-condition: "(data_value->'speed')::FLOAT >= 5"
+          data-value-condition: null
+    -
+      # 上空リスク算出条件#15 飛行計画
+      risk-type: air
+      risk-condition-id: 15
+      risk-value: 9
+      adjust-value: -1
+      items:
+        -
+          data-type: "01080100"
+          buffer-flag: false
+          buffer-distance: null
+          data-value-condition: null
+    -
+      # 上空リスク算出条件#14 飛行禁止エリア
+      risk-type: air
+      risk-condition-id: 14
+      risk-value: 9
+      adjust-value: -1
+      items:
+        -
+          data-type: "01080200"
+          buffer-flag: false
+          buffer-distance: null
+          data-value-condition: null
+    -
+      # 上空リスク算出条件#13 空港
+      risk-type: air
+      risk-condition-id: 13
+      risk-value: 9
+      adjust-value: -1
+      items:
+        -
+          data-type: "01010404"
+          buffer-flag: false
+          buffer-distance: null
+          data-value-condition: ""
+        -
+          data-type: "01010404"
+          buffer-flag: true
+          buffer-distance: 300.0
+          data-value-condition: ""
+    -
+      # 上空リスク算出条件#12 建築物
+      risk-type: air
+      risk-condition-id: 12
+      risk-value: 9
+      adjust-value: -1
+      items:
+        -
+          data-type: "01010401"
+          buffer-flag: false
+          buffer-distance: 0.0
+          data-value-condition: ""
+    -
+      # 上空リスク算出条件#11 標高情報
+      risk-type: air
+      risk-condition-id: 11
+      risk-value: 9
+      adjust-value: -1
+      items:
+        -
+          data-type: "01010200"
+          buffer-flag: false
+          buffer-distance: 0.0
+          data-value-condition: ""
+    -
+      # 上空リスク算出条件#10 有人機
+      risk-type: air
+      risk-condition-id: 10
+      risk-value: 9
+      adjust-value: -1
+      items:
+        -
+          data-type: "01040000"
+          buffer-flag: false
+          buffer-distance: null
+          data-value-condition: ""
+        -
+          data-type: "01040000"
+          buffer-flag: true
+          buffer-distance: null
+          data-value-condition: ""
+    -
+      # 上空リスク算出条件#9 空港
+      risk-type: air
+      risk-condition-id: 9
+      risk-value: 7
+      adjust-value: -1
+      items:
+        -
+          data-type: "01010404"
+          buffer-flag: false
+          buffer-distance: null
+          data-value-condition: ""
+        -
+          data-type: "01010404"
+          buffer-flag: true
+          buffer-distance: 24000.0
+          data-value-condition: ""
+    -
+      # 上空リスク算出条件#8 風速
+      risk-type: air
+      risk-condition-id: 8
+      risk-value: 7
+      adjust-value: -1
+      items:
+        -
+          data-type: "01020100"
+          buffer-flag: false
+          buffer-distance: 0.0
+          data-value-condition: "(data_value->'speed')\\:\\:FLOAT >= 5"
+    -
+      # 上空リスク算出条件#7 降雨
+      risk-type: air
+      risk-condition-id: 7
+      risk-value: 7
+      adjust-value: -1
+      items:
+        -
+          data-type: "01020200"
+          buffer-flag: false
+          buffer-distance: 0.0
+          data-value-condition: "(data_value->'intensity')\\:\\:FLOAT >= 3"
+    -
+      # 上空リスク算出条件#6 空港
+      risk-type: air
+      risk-condition-id: 6
+      risk-value: 7
+      adjust-value: -1
+      items:
+        -
+          data-type: "01010404"
+          buffer-flag: false
+          buffer-distance: null
+          data-value-condition: ""
+        -
+          data-type: "01010404"
+          buffer-flag: true
+          buffer-distance: 48000.0
+          data-value-condition: ""
+    -
+      # 上空リスク算出条件#5 人口集中地区
+      risk-type: air
+      risk-condition-id: 5
+      risk-value: 5
+      adjust-value: -1
+      items:
+        -
+          data-type: "01010100"
+          buffer-flag: false
+          buffer-distance: 0.0
+          data-value-condition: ""
+    -
+      # 上空リスク算出条件#4 降雨
+      risk-type: air
+      risk-condition-id: 4
+      risk-value: 5
+      adjust-value: -1
+      items:
+        -
+          data-type: "01020200"
+          buffer-flag: false
+          buffer-distance: 0.0
+          data-value-condition: "(data_value->'intensity')\\:\\:FLOAT < 3 AND (data_value->'intensity')\\:\\:FLOAT >= 1"
+    -
+      # 上空リスク算出条件#2 高度152m以上
+      risk-type: air
+      risk-condition-id: 2
+      risk-value: 3
+      adjust-value: -0.5
+      items:
+        -
+          data-type: ""
+          buffer-flag: false
+          buffer-distance: 0.0
+          data-value-condition: ""
+    -
+      # 上空リスク算出条件#1 高度152m未満
+      risk-type: air
+      risk-condition-id: 1
+      risk-value: 2
+      adjust-value: 0
+      items:
+        -
+          data-type: ""
+          buffer-flag: false
+          buffer-distance: 0.0
+          data-value-condition: ""

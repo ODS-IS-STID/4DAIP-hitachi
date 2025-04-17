@@ -1,0 +1,58 @@
+# voxel-data-link-commandプロジェクトのapplication.ymlに同じ内容を記載すること
+
+spring:
+  main:
+    # tomcatを起動しない
+    web-application-type: none
+  # JDBC Datasource設定
+  datasource:
+    driverClassName: org.postgresql.Driver
+    username: postgres
+    password: postgres
+    url: jdbc:postgresql://localhost:5432/td_aip?rewriteBatchedStatements=true
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+#    properties:
+#      hibernate:
+#        show_sql: true
+#        use_sql_comments: true
+#        format_sql: true
+
+# データベース.最大リトライ回数
+database.max-retry-count: 3
+
+logging:
+  level:
+    com.hitachi.tdaip: debug
+#    org.hibernate.SQL: debug
+#    org.hibernate.type: trace
+#    org.hibernate.type.descriptor.sql.BasicBinder: trace
+
+tdCityModel:
+  airport:
+    bufferDistances: 300,24000,48000
+
+# ボクセル生成
+create-voxel:
+  #人口集中地区
+  did:
+    #有効期限年数
+    valid-year: 20
+
+# SRID
+srid:
+  # 地理座標系
+  geographic:
+    # 次元
+    dimension:
+      # 2次元(6668:JGD2011)
+      two: 6668
+      # 3次元(6697:JGD2011 + JGD2011 (vertical) height)
+      three: 6697
+
+
+# 実証
+experiment:
+  # 空間ID
+  spatial-id:
+    z: 21
