@@ -108,7 +108,7 @@ python3系以降のバージョン推奨
 <pre class="hljs"><code><div># 作業ディレクトリに移動
 cd /createInsertQueryForSpaceIdLocation
 
-# 起動プログラムファイルを編集
+#起動プログラムファイルを編集
 vi createInsertQueryForSpaceIdLocation.py
 </div></code></pre>
 <p>createInsertQueryForSpaceIdLocation.py変更箇所</p>
@@ -121,22 +121,22 @@ EAST = 141.025000000154
 # 上(標高[m]、海抜高度、ALT:大)
 HIGH = 200
 
-# 南(緯度、LAT:小)
-# SOUTH = 37.6250000002308
-# 西(経度、LON:小)
+#南(緯度、LAT:小)
+#SOUTH = 37.6250000002308
+#西(経度、LON:小)
 WEST = 141.0
-# 下(標高[m]、海抜高度、ALT:小)
+#下(標高[m]、海抜高度、ALT:小)
 LOW = 0
 
-# Zoomレベル
+#Zoomレベル
 ZOOM=20
-# 高度方向が1mになるZoomレベル
+#高度方向が1mになるZoomレベル
 ONE_M_ZOOM_LEVEL = 25
-# 2Dのテーブル名
+#2Dのテーブル名
 TABLE_NAME_2D = 'spatial_id_location_2d'
-# 3Dのテーブル名
+#3Dのテーブル名
 TABLE_NAME_3D = 'spatial_id_location_3d'
-# テーブル名(TABLE_NAME_2DかTABLE_NAME_3Dのどちらか)
+#テーブル名(TABLE_NAME_2DかTABLE_NAME_3Dのどちらか)
 TABLE_NAME = TABLE_NAME_2D
 
 </div></code></pre>
@@ -151,7 +151,7 @@ TABLE_NAME = TABLE_NAME_2D
 <pre class="hljs"><code><div># 作業ディレクトリに移動
 cd /createInsertQueryForSpaceIdLocation
 
-# 起動プログラムファイルを編集
+#起動プログラムファイルを編集
 vi createInsertQueryForSpaceIdLocation.py
 </div></code></pre>
 <p>createInsertQueryForSpaceIdLocation.py変更箇所</p>
@@ -164,22 +164,22 @@ EAST = 141.025000000154
 # 上(標高[m]、海抜高度、ALT:大)
 HIGH = 200
 
-# 南(緯度、LAT:小)
-# SOUTH = 37.6250000002308
-# 西(経度、LON:小)
+#南(緯度、LAT:小)
+#SOUTH = 37.6250000002308
+#西(経度、LON:小)
 WEST = 141.0
-# 下(標高[m]、海抜高度、ALT:小)
+#下(標高[m]、海抜高度、ALT:小)
 LOW = 0
 
-# Zoomレベル
+#Zoomレベル
 ZOOM=20
-# 高度方向が1mになるZoomレベル
+#高度方向が1mになるZoomレベル
 ONE_M_ZOOM_LEVEL = 25
-# 2Dのテーブル名
+#2Dのテーブル名
 TABLE_NAME_2D = 'spatial_id_location_2d'
-# 3Dのテーブル名
+#3Dのテーブル名
 TABLE_NAME_3D = 'spatial_id_location_3d'
-# テーブル名(TABLE_NAME_2DかTABLE_NAME_3Dのどちらか)
+#テーブル名(TABLE_NAME_2DかTABLE_NAME_3Dのどちらか)
 TABLE_NAME = TABLE_NAME_3D
 
 </div></code></pre>
