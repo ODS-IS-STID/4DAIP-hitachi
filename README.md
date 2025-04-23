@@ -196,11 +196,11 @@ gdal3系以降のバージョン推奨
 <h2 id="%EF%BC%95%E5%90%84%E3%83%97%E3%83%AD%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E3%81%AE%E3%83%93%E3%83%AB%E3%83%89%E3%81%A8%E5%AE%9F%E8%A1%8C%E6%96%B9%E6%B3%95">５．各プロジェクトのビルドと実行方法</h2>
 <p>各プロジェクトreadme参照</p>
 <ul>
-<li><a href="../assets/01_Elevation-data-link_readme.md">Elevation-data-link</a></li>
-<li><a href="../assets/02_DID-data-link_readme.md">DID-data-link</a></li>
-<li><a href="../assets/03_3d-city-model-data-link_readme.md">3d-city-model-data-link</a></li>
-<li><a href="../assets/04_voxel-data-link-command_readme.md">voxel-data-link-command</a></li>
-<li><a href="../assets/05_drone-domain-api-service_readme.md">drone-domain-api-service</a></li>
+<li><a href="https://github.com/ODS-IS-STID/4DAIP-hitachi/blob/4DAIP-hitachi/4DAIP-hitachi/assets/01_Elevation-data-link_readme.md">Elevation-data-link</a></li>
+<li><a href="https://github.com/ODS-IS-STID/4DAIP-hitachi/blob/4DAIP-hitachi/4DAIP-hitachi/assets/02_DID-data-link_readme.md">DID-data-link</a></li>
+<li><a href="https://github.com/ODS-IS-STID/4DAIP-hitachi/blob/4DAIP-hitachi/4DAIP-hitachi/assets/03_3d-city-model-data-link_readme.md">3d-city-model-data-link</a></li>
+<li><a href="https://github.com/ODS-IS-STID/4DAIP-hitachi/blob/4DAIP-hitachi/4DAIP-hitachi/assets/04_voxel-data-link-command_readme.md">voxel-data-link-command</a></li>
+<li><a href="https://github.com/ODS-IS-STID/4DAIP-hitachi/blob/4DAIP-hitachi/4DAIP-hitachi/assets/05_drone-domain-api-service_readme.md">drone-domain-api-service</a></li>
 </ul>
 
 <h2 id="%EF%BC%96%E8%91%97%E8%80%85">6．著者</h2>
